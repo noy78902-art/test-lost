@@ -114,7 +114,7 @@ tr:last-child td{border-bottom:none}
       </div>
       <div class="frow">
         <label>② บาร์โค้ด <span style="color:#e04040">*</span></label>
-        <input type="text" id="fBarcode" placeholder="สแกนหรือพิมพ์บาร์โค้ด" oninput="previewBarcode()" autocomplete="off" inputmode="numeric">
+        <input type="text" id="fBarcode" placeholder="สแกนหรือพิมพ์บาร์โค้ด" oninput="previewBarcode();clearTimeout(window._bcTimer);window._bcTimer=setTimeout(()=>{if(document.getElementById('fBarcode').value.trim().length>=6){const qty=document.getElementById('fQty');qty.select();qty.focus();}},600)" autocomplete="off" inputmode="numeric">
         <div class="bc-preview" id="bcPreview"><svg id="bcSvgForm"></svg><div class="bc-val" id="bcValForm"></div></div>
       </div>
       <div class="frow">
@@ -567,8 +567,10 @@ function exportCSV(){
       if(buf.length>0){
         document.getElementById('fBarcode').value=buf;
         previewBarcode();buf='';clearTimeout(timer);
-        document.getElementById('fQty').select();
-        document.getElementById('fQty').focus();
+        setTimeout(()=>{
+          const qty=document.getElementById('fQty');
+          qty.select();qty.focus();
+        },80);
       }
       return;
     }
@@ -577,7 +579,7 @@ function exportCSV(){
       document.getElementById('fBarcode').value=buf;
       previewBarcode();clearTimeout(timer);
       timer=setTimeout(()=>{
-        if(buf.length>=6){const b=buf;buf='';document.getElementById('fBarcode').value=b;previewBarcode();document.getElementById('fQty').select();document.getElementById('fQty').focus();}
+        if(buf.length>=6){const b=buf;buf='';document.getElementById('fBarcode').value=b;previewBarcode();setTimeout(()=>{const qty=document.getElementById('fQty');qty.select();qty.focus();},80);}
         else buf='';
       },300);
     } else if(e.key.length===1){
