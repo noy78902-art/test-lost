@@ -110,7 +110,7 @@ tr:last-child td{border-bottom:none}
       <div class="ft">เพิ่มรายการใหม่</div>
       <div class="frow">
         <label>① โลเคชั่น <span style="color:#e04040">*</span></label>
-        <input type="text" id="fLoc" placeholder="เช่น ชั้น A3" autocomplete="off">
+        <input type="text" id="fLoc" placeholder="เช่น ชั้น A3" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('fBarcode').focus()}">
       </div>
       <div class="frow">
         <label>② บาร์โค้ด <span style="color:#e04040">*</span></label>
@@ -132,7 +132,7 @@ tr:last-child td{border-bottom:none}
         <label>⑤ จำนวนนับได้ <span style="color:#aaa;font-weight:400">(กดปุ่ม ± เพื่อลบล้างรายการที่ยิงผิด)</span></label>
         <div style="display:flex;gap:8px">
           <button type="button" id="btnSign" onclick="toggleSign()" style="width:48px;flex-shrink:0;font-size:18px;font-weight:700;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a1a;cursor:pointer">+</button>
-          <input type="text" id="fQty" value="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="flex:1">
+          <input type="text" id="fQty" value="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addToCart()}">
         </div>
         <div id="pieceCalc" style="font-size:12px;color:#534AB7;margin-top:4px;display:none"></div>
       </div>
@@ -567,7 +567,8 @@ function exportCSV(){
       if(buf.length>0){
         document.getElementById('fBarcode').value=buf;
         previewBarcode();buf='';clearTimeout(timer);
-        addToCart();
+        document.getElementById('fQty').select();
+        document.getElementById('fQty').focus();
       }
       return;
     }
@@ -576,7 +577,7 @@ function exportCSV(){
       document.getElementById('fBarcode').value=buf;
       previewBarcode();clearTimeout(timer);
       timer=setTimeout(()=>{
-        if(buf.length>=6){const b=buf;buf='';document.getElementById('fBarcode').value=b;previewBarcode();addToCart();}
+        if(buf.length>=6){const b=buf;buf='';document.getElementById('fBarcode').value=b;previewBarcode();document.getElementById('fQty').select();document.getElementById('fQty').focus();}
         else buf='';
       },300);
     } else if(e.key.length===1){
