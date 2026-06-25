@@ -1,95 +1,203 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>บันทึกสินค้าเกิน</title>
+<title>สินค้าเกิน</title>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;color:#1a1a1a;min-height:100vh}
-.w{max-width:480px;margin:0 auto;padding:12px}
-.hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:12px;background:#fff;border-radius:12px;border:1px solid #e5e5e5}
-.ht{font-size:16px;font-weight:600;color:#1a1a1a}
-.dot{width:10px;height:10px;border-radius:50%;background:#ccc;flex-shrink:0}
-.dot.ok{background:#3aaa6e}.dot.err{background:#e04040}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
-.sc{background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #e5e5e5}
-.sc-l{font-size:11px;color:#888;margin-bottom:3px}
-.sc-v{font-size:20px;font-weight:600;color:#1a1a1a}
-.fc{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:14px;margin-bottom:14px}
-.ft{font-size:13px;font-weight:600;color:#888;margin-bottom:12px}
-label{font-size:12px;color:#888;display:block;margin-bottom:4px}
-input[type=text]{width:100%;font-size:16px;padding:12px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;-webkit-appearance:none;appearance:none;outline:none}
-input:focus{border-color:#534AB7;box-shadow:0 0 0 3px rgba(83,74,183,0.08)}
-.frow{margin-bottom:10px}
-.bc-preview{margin-top:8px;text-align:center;display:none}
-.bc-preview svg{max-width:100%;height:55px}
-.bc-val{font-size:12px;color:#aaa;margin-top:3px;word-break:break-all}
-.lock-row{display:flex;align-items:center;gap:6px;font-size:12px;color:#666;margin:6px 0 10px;cursor:pointer}
-.lock-row input{width:15px;height:15px;flex-shrink:0}
-.btn-save{width:100%;padding:14px;background:#534AB7;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin-top:4px;-webkit-tap-highlight-color:transparent;transition:opacity 0.15s}
-.btn-save:active{opacity:0.8}.btn-save:disabled{background:#aaa;cursor:not-allowed}
-.btn-sec{width:100%;padding:12px;background:#f0f0f0;color:#1a1a1a;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:4px;-webkit-tap-highlight-color:transparent}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:24px;font-size:14px;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:99;white-space:nowrap}
-.toast.show{opacity:1}
-.main-tabs{display:flex;margin-bottom:12px;border:1px solid #ddd;border-radius:10px;overflow:hidden;background:#fff}
-.mtab{flex:1;padding:10px;font-size:13px;cursor:pointer;background:transparent;color:#888;border:none;font-weight:500;-webkit-tap-highlight-color:transparent}
-.mtab.on{background:#534AB7;color:#fff;font-weight:600}
-.view-tabs{display:flex;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;overflow:hidden;background:#fff}
-.vtab{flex:1;padding:10px;font-size:13px;cursor:pointer;background:transparent;color:#888;border:none;font-weight:500}
-.vtab.on{background:#EEEDFE;color:#3C3489;font-weight:600}
-.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.btn-exp{padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;font-weight:500}
-.btn-exp svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.ll{font-size:13px;font-weight:600;color:#888}
-.tbl-wrap{overflow-x:auto;background:#fff;border:1px solid #e5e5e5;border-radius:12px;margin-bottom:14px}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:300px}
-th{background:#fafafa;padding:9px 10px;text-align:left;font-weight:600;color:#888;border-bottom:1px solid #e5e5e5;white-space:nowrap}
-td{padding:9px 10px;border-bottom:1px solid #f0f0f0;color:#1a1a1a;vertical-align:middle}
+:root{
+  --bg:#F2F3F8;--surface:#FFFFFF;--surface2:#F7F8FC;--border:#E4E5EF;
+  --accent:#534AB7;--accent-dim:#EAE9F7;--accent-text:#FFFFFF;
+  --text:#111219;--text2:#6B6D82;--text3:#9B9DB5;
+  --green:#1FB075;--red:#E0404A;--orange:#E07020;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.06);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.06);
+  --radius:14px;--radius-sm:10px;--radius-xs:8px;
+  --transition:200ms ease;
+}
+[data-theme="dark"]{
+  --bg:#0C0D12;--surface:#161720;--surface2:#1E1F2C;--border:#272835;
+  --accent:#7C74E8;--accent-dim:#1E1D34;--accent-text:#FFFFFF;
+  --text:#EDEEF6;--text2:#8E90A8;--text3:#5A5C72;
+  --green:#25C97F;--red:#FF5561;--orange:#F09030;
+  --shadow:0 1px 3px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.4);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Kanit,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background var(--transition),color var(--transition)}
+.mono{font-family:'SF Mono','Fira Code','Consolas',monospace}
+
+/* Layout */
+.w{max-width:480px;margin:0 auto;padding:12px 12px 80px}
+
+/* Header */
+.hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:12px 14px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid var(--border);transition:background var(--transition),border-color var(--transition)}
+.hd-left{display:flex;align-items:center;gap:8px}
+.hd-icon{width:32px;height:32px;background:var(--accent-dim);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hd-icon svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hd-title{font-size:15px;font-weight:700;color:var(--text)}
+.hd-right{display:flex;align-items:center;gap:8px}
+.conn-badge{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);padding:4px 8px;background:var(--surface2);border-radius:20px;border:1px solid var(--border)}
+.conn-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .3s}
+.conn-dot.ok{background:var(--green)}.conn-dot.err{background:var(--red)}
+.theme-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all var(--transition)}
+.theme-btn:hover{background:var(--accent-dim)}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow-sm);transition:background var(--transition),border-color var(--transition)}
+.stat-label{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.stat-val{font-size:24px;font-weight:700;color:var(--text);font-family:'SF Mono','Consolas',monospace}
+
+/* Main tabs */
+.main-tabs{display:flex;gap:4px;margin-bottom:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:4px;box-shadow:var(--shadow-sm)}
+.mtab{flex:1;padding:9px 6px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);border:none;border-radius:10px;transition:all var(--transition);white-space:nowrap}
+.mtab.on{background:var(--accent);color:var(--accent-text);box-shadow:0 2px 8px rgba(83,74,183,.35)}
+
+/* Card / Form container */
+.fc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow);transition:background var(--transition),border-color var(--transition)}
+.fc-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px}
+
+/* Form fields */
+.frow{margin-bottom:12px}
+label.fl{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:5px}
+.req{color:var(--red);margin-left:2px}
+input[type=text]{width:100%;font-size:15px;padding:11px 13px;border-radius:var(--radius-xs);border:1.5px solid var(--border);background:var(--surface2);color:var(--text);outline:none;transition:all var(--transition);font-family:inherit;-webkit-appearance:none}
+input[type=text]:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px rgba(83,74,183,.12)}
+input.mono-input{font-family:'SF Mono','Consolas',monospace;letter-spacing:.5px}
+input[readonly]{background:var(--accent-dim);color:var(--accent);font-weight:600;border-color:var(--accent-dim)}
+
+/* Barcode preview */
+.bc-wrap{margin-top:8px;padding:10px;background:var(--surface2);border-radius:var(--radius-xs);border:1px solid var(--border);text-align:center;display:none;transition:all var(--transition)}
+.bc-wrap.flash{animation:bcflash .4s ease}
+@keyframes bcflash{0%{background:var(--surface2)}40%{background:#d4fce8}100%{background:var(--surface2)}}
+.bc-val{font-family:'SF Mono','Consolas',monospace;font-size:12px;color:var(--text3);margin-top:4px;letter-spacing:1px}
+.bc-wrap svg{max-width:100%;height:50px}
+
+/* Hint */
+.hint{font-size:11px;margin-top:5px;display:none;padding:6px 10px;border-radius:6px;font-weight:500}
+.hint.ok{background:#e6f9f0;color:var(--green)}
+.hint.warn{background:#fff4e5;color:var(--orange)}
+[data-theme="dark"] .hint.ok{background:#0d2d1e}
+[data-theme="dark"] .hint.warn{background:#2a1d06}
+
+/* Unit buttons */
+.unit-wrap{display:flex;gap:6px;flex-wrap:wrap}
+.unit-btn{padding:7px 14px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--surface2);font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);transition:all var(--transition);font-family:'SF Mono','Consolas',monospace}
+.unit-btn:hover{border-color:var(--accent);color:var(--accent)}
+.unit-btn.on{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 2px 6px rgba(83,74,183,.3)}
+
+/* Qty row */
+.qty-row{display:flex;gap:8px;align-items:stretch}
+.sign-btn{width:46px;flex-shrink:0;font-size:20px;font-weight:700;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--surface2);color:var(--text);cursor:pointer;transition:all var(--transition);font-family:monospace}
+.sign-btn.neg{border-color:var(--red);color:var(--red);background:rgba(224,64,74,.07)}
+.piece-calc{font-size:12px;color:var(--accent);margin-top:5px;font-family:'SF Mono','Consolas',monospace;display:none}
+
+/* Lock row */
+.lock-row{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2);margin:8px 0 14px;cursor:pointer;user-select:none}
+.lock-row input{width:15px;height:15px;accent-color:var(--accent)}
+
+/* Buttons */
+.btn{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;transition:all var(--transition);font-family:inherit;letter-spacing:.2px}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 2px 10px rgba(83,74,183,.35)}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn-primary:active{transform:scale(.98);filter:brightness(.95)}
+.btn-primary:disabled{background:var(--text3);box-shadow:none;cursor:not-allowed}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn+.btn{margin-top:8px}
+
+/* Cart */
+.cart-hd{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.cart-item{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--accent-dim);border-radius:var(--radius-xs);margin-bottom:6px;border:1px solid var(--border)}
+.cart-bc{font-family:'SF Mono','Consolas',monospace;font-size:12px;font-weight:700;color:var(--text);min-width:80px}
+.cart-nm{font-size:12px;color:var(--accent);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cart-qty{font-family:'SF Mono','Consolas',monospace;font-size:13px;font-weight:700;color:var(--text);white-space:nowrap}
+.cart-del{color:var(--red);cursor:pointer;font-size:17px;padding:0 2px;flex-shrink:0;opacity:.6;transition:opacity var(--transition)}
+.cart-del:hover{opacity:1}
+.divider{height:1px;background:var(--border);margin:12px 0}
+
+/* View tabs */
+.view-tabs{display:flex;gap:4px;margin-bottom:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:4px;box-shadow:var(--shadow-sm)}
+.vtab{flex:1;padding:8px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);border:none;border-radius:10px;transition:all var(--transition)}
+.vtab.on{background:var(--accent-dim);color:var(--accent)}
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.lbl{font-size:13px;font-weight:600;color:var(--text2)}
+.exp-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xs);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all var(--transition)}
+.exp-btn:hover{border-color:var(--accent);color:var(--accent)}
+.exp-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow-sm);transition:background var(--transition),border-color var(--transition)}
+.card-body{padding:13px 14px}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.card-time{font-size:11px;color:var(--text3);font-family:'SF Mono','Consolas',monospace}
+.card-loc{font-size:11px;font-weight:600;color:var(--text2);background:var(--surface2);padding:3px 8px;border-radius:20px;border:1px solid var(--border)}
+.card-bc{font-family:'SF Mono','Consolas',monospace;font-size:12px;color:var(--text3);margin-bottom:4px;letter-spacing:.5px}
+.card-nm{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:10px}
+.card-nm.empty{color:var(--text3);font-weight:400}
+.cnt-row{display:flex;gap:8px}
+.cnt-box{flex:1;background:var(--surface2);border-radius:var(--radius-xs);padding:8px 10px;text-align:center;border:1px solid var(--border)}
+.cnt-lbl{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.cnt-num{font-size:20px;font-weight:700;color:var(--text);font-family:'SF Mono','Consolas',monospace}
+.neg{color:var(--green)}
+
+/* Table */
+.tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;box-shadow:var(--shadow-sm)}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:400px}
+th{background:var(--surface2);padding:9px 10px;text-align:left;font-weight:700;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+td.bc-td{font-family:'SF Mono','Consolas',monospace;font-size:11px;color:var(--text2)}
+td.nm-td{color:var(--accent);font-weight:500}
+td.num-td{font-family:'SF Mono','Consolas',monospace;font-weight:700;text-align:right}
 tr:last-child td{border-bottom:none}
-.diff-neg{color:#27500A;font-weight:600}
-.unit-btn{padding:8px 14px;border:2px solid #ddd;border-radius:8px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;color:#555;transition:all .15s}
-.unit-btn.on{border-color:#534AB7;background:#534AB7;color:#fff}
-.cart-item{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#F3F2FC;border-radius:8px;margin-bottom:6px;font-size:12px;flex-wrap:wrap}
-.cart-bc{font-weight:700;color:#1a1a1a;min-width:90px}
-.cart-nm{color:#534AB7;flex:1;min-width:80px}
-.cart-qty{font-weight:700;white-space:nowrap}
-.cart-del{color:#A32D2D;cursor:pointer;font-size:16px;padding:0 4px;margin-left:auto}
-.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;margin-bottom:10px;overflow:hidden}
-.card-body{padding:12px}
-.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.csub{font-size:12px;color:#aaa}
-.cnt-box{background:#f5f5f7;border-radius:10px;padding:8px;text-align:center}
-.cnt-lbl{font-size:11px;color:#888;margin-bottom:5px}
-.cnt-num{font-size:22px;font-weight:700;color:#1a1a1a}
-.empty{text-align:center;padding:40px 0;color:#bbb;font-size:14px}
-/* Master tab */
-.master-search{display:flex;gap:8px;margin-bottom:10px}
-.master-search input{flex:1}
-.master-item{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:10px 12px;margin-bottom:8px}
-.master-item-bc{font-size:11px;color:#aaa;margin-bottom:2px}
-.master-item-nm{font-weight:600;color:#1a1a1a;margin-bottom:4px}
-.master-item-units{display:flex;gap:6px;flex-wrap:wrap}
-.unit-tag{font-size:11px;padding:3px 8px;border-radius:20px;background:#EEEDFE;color:#534AB7;font-weight:600}
-.add-master-form{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:14px;margin-bottom:12px}
-.unit-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
-.unit-row input{flex:1;font-size:14px;padding:8px}
-.unit-row .size-in{width:80px;font-size:14px;padding:8px}
-.unit-row .del-unit{color:#A32D2D;cursor:pointer;font-size:18px;padding:0 4px}
-.badge-new{display:inline-block;font-size:10px;padding:2px 6px;background:#3aaa6e;color:#fff;border-radius:20px;vertical-align:middle;margin-left:4px}
+tr:hover td{background:var(--surface2)}
+
+/* Master */
+.master-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.search-wrap input{padding-left:34px}
+.master-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow-sm);transition:border-color var(--transition)}
+.master-item:hover{border-color:var(--accent)}
+.mi-bc{font-family:'SF Mono','Consolas',monospace;font-size:11px;color:var(--text3);margin-bottom:3px;letter-spacing:.5px}
+.mi-nm{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.mi-units{display:flex;gap:5px;flex-wrap:wrap}
+.unit-tag{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--accent-dim);color:var(--accent);font-weight:700;font-family:'SF Mono','Consolas',monospace;border:1px solid var(--border)}
+.unit-row-inp{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.unit-row-inp input{flex:1;font-size:14px;padding:9px 11px}
+.unit-row-inp .sz{width:90px}
+.unit-row-inp .del-u{color:var(--red);cursor:pointer;font-size:18px;opacity:.5;transition:opacity var(--transition)}
+.unit-row-inp .del-u:hover{opacity:1}
+.add-unit-btn{padding:7px 14px;border:1.5px dashed var(--accent);border-radius:var(--radius-xs);background:transparent;color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;transition:all var(--transition)}
+.add-unit-btn:hover{background:var(--accent-dim)}
+
+/* Empty */
+.empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:24px;font-size:13px;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:99;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 <div class="w">
+
+  <!-- Header -->
   <div class="hd">
-    <div class="ht">
-      <svg style="width:18px;height:18px;vertical-align:-3px;margin-right:6px;stroke:#534AB7;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg>
-      สินค้าเกิน
+    <div class="hd-left">
+      <div class="hd-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg>
+      </div>
+      <span class="hd-title">สินค้าเกิน</span>
     </div>
-    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#888">
-      <div class="dot" id="connDot"></div>
-      <span id="connTxt">กำลังเชื่อมต่อ...</span>
+    <div class="hd-right">
+      <div class="conn-badge">
+        <div class="conn-dot" id="connDot"></div>
+        <span id="connTxt">กำลังเชื่อมต่อ...</span>
+      </div>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Dark/Light mode">🌙</button>
     </div>
   </div>
 
@@ -100,61 +208,83 @@ tr:last-child td{border-bottom:none}
     <button class="mtab" id="tabMaster" onclick="switchMain('master')">🗂 Master</button>
   </div>
 
-  <!-- ===== SCAN TAB ===== -->
+  <!-- ===== SCAN ===== -->
   <div id="pageScan">
-    <div class="stats" id="stats">
-      <div class="sc"><div class="sc-l">รายการ</div><div class="sc-v" id="stCount">—</div></div>
-      <div class="sc"><div class="sc-l">นับได้รวม</div><div class="sc-v" id="stTotal">—</div></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">รายการ</div><div class="stat-val" id="stCount">—</div></div>
+      <div class="stat"><div class="stat-label">ชิ้นรวม</div><div class="stat-val" id="stTotal">—</div></div>
     </div>
+
     <div class="fc">
-      <div class="ft">เพิ่มรายการใหม่</div>
+      <div class="fc-title">เพิ่มรายการใหม่</div>
+
       <div class="frow">
-        <label>① โลเคชั่น <span style="color:#e04040">*</span></label>
-        <input type="text" id="fLoc" placeholder="เช่น ชั้น A3" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('fBarcode').focus()}">
+        <label class="fl">① โลเคชั่น<span class="req">*</span></label>
+        <input type="text" id="fLoc" placeholder="เช่น A3" autocomplete="off"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('fBarcode').focus()}">
       </div>
+
       <div class="frow">
-        <label>② บาร์โค้ด <span style="color:#e04040">*</span></label>
-        <input type="text" id="fBarcode" placeholder="สแกนหรือพิมพ์บาร์โค้ด" oninput="previewBarcode();clearTimeout(window._bcTimer);window._bcTimer=setTimeout(()=>{if(document.getElementById('fBarcode').value.trim().length>=6){const qty=document.getElementById('fQty');qty.select();qty.focus();}},600)" autocomplete="off" inputmode="numeric">
-        <div class="bc-preview" id="bcPreview"><svg id="bcSvgForm"></svg><div class="bc-val" id="bcValForm"></div></div>
+        <label class="fl">② บาร์โค้ด<span class="req">*</span></label>
+        <input type="text" id="fBarcode" class="mono-input" placeholder="สแกนหรือพิมพ์บาร์โค้ด"
+          oninput="onBarcodeInput()" autocomplete="off" inputmode="numeric">
+        <div class="bc-wrap" id="bcPreview">
+          <svg id="bcSvgForm"></svg>
+          <div class="bc-val" id="bcValForm"></div>
+        </div>
       </div>
+
       <div class="frow">
-        <label>③ ชื่อสินค้า</label>
-        <input type="text" id="fItemName" placeholder="ดึงอัตโนมัติ หรือพิมพ์เองถ้าไม่พบ" style="color:#534AB7;font-weight:600" autocomplete="off">
-        <div id="itemHint" style="font-size:11px;color:#aaa;margin-top:4px;display:none"></div>
+        <label class="fl">③ ชื่อสินค้า</label>
+        <input type="text" id="fItemName" placeholder="ดึงอัตโนมัติ หรือพิมพ์เองถ้าไม่พบ" autocomplete="off">
+        <div class="hint" id="itemHint"></div>
       </div>
+
       <div class="frow">
-        <label>④ หน่วย & ขนาด</label>
-        <div id="unitBtns" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px"></div>
-        <input type="hidden" id="fUnit" value="ชิ้น">
+        <label class="fl">④ หน่วย</label>
+        <div class="unit-wrap" id="unitBtns"></div>
+        <input type="hidden" id="fUnit" value="pcs">
         <input type="hidden" id="fUnitQty" value="1">
       </div>
+
       <div class="frow">
-        <label>⑤ จำนวนนับได้ <span style="color:#aaa;font-weight:400">(กดปุ่ม ± เพื่อลบล้างรายการที่ยิงผิด)</span></label>
-        <div style="display:flex;gap:8px">
-          <button type="button" id="btnSign" onclick="toggleSign()" style="width:48px;flex-shrink:0;font-size:18px;font-weight:700;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a1a;cursor:pointer">+</button>
-          <input type="text" id="fQty" value="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addToCart()}">
+        <label class="fl">⑤ จำนวน <span style="color:var(--text3);font-weight:400">(± เพื่อลบล้าง)</span></label>
+        <div class="qty-row">
+          <button type="button" class="sign-btn" id="btnSign" onclick="toggleSign()">+</button>
+          <input type="text" id="fQty" value="1" class="mono-input"
+            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="flex:1"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();addToCart()}"
+            oninput="updatePieceCalc()">
         </div>
-        <div id="pieceCalc" style="font-size:12px;color:#534AB7;margin-top:4px;display:none"></div>
+        <div class="piece-calc" id="pieceCalc"></div>
       </div>
-      <label class="lock-row"><input type="checkbox" id="fLockLoc" checked> ล็อกโลเคชั่นไว้ใช้ต่อ</label>
-      <button class="btn-sec" onclick="addToCart()">✅ บันทึก</button>
-      <div id="cartArea" style="display:none;margin-top:12px">
-        <div style="font-weight:600;margin-bottom:6px;color:#534AB7">รายการในตะกร้า:</div>
+
+      <label class="lock-row">
+        <input type="checkbox" id="fLockLoc" checked> ล็อกโลเคชั่นไว้ใช้ต่อ
+      </label>
+
+      <button class="btn btn-ghost" onclick="addToCart()">✅ บันทึก</button>
+
+      <div id="cartArea" style="display:none;margin-top:14px">
+        <div class="divider"></div>
+        <div class="cart-hd">รายการในตะกร้า (<span id="cartCount">0</span>)</div>
         <div id="cartList"></div>
-        <button class="btn-save" id="btnSave" onclick="submitCart()">💾 บันทึกเข้า Google Sheet (<span id="cartCount">0</span> รายการ)</button>
+        <button class="btn btn-primary" id="btnSave" onclick="submitCart()">
+          💾 ส่งเข้า Google Sheet
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- ===== REPORT TAB ===== -->
+  <!-- ===== REPORT ===== -->
   <div id="pageReport" style="display:none">
     <div class="view-tabs">
       <button class="vtab on" id="vCard" onclick="switchView('card')">การ์ด</button>
       <button class="vtab" id="vTable" onclick="switchView('table')">ตาราง</button>
     </div>
     <div class="toolbar">
-      <span class="ll" id="listLbl">รายการทั้งหมด</span>
-      <button class="btn-exp" onclick="exportCSV()">
+      <span class="lbl" id="listLbl">รายการทั้งหมด</span>
+      <button class="exp-btn" onclick="exportCSV()">
         <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Export CSV
       </button>
@@ -163,29 +293,28 @@ tr:last-child td{border-bottom:none}
     <div id="tableView" style="display:none"></div>
   </div>
 
-  <!-- ===== MASTER TAB ===== -->
+  <!-- ===== MASTER ===== -->
   <div id="pageMaster" style="display:none">
-    <!-- Add new item -->
-    <div class="add-master-form">
-      <div class="ft">➕ เพิ่มสินค้าใหม่ใน Master</div>
+    <div class="master-form">
+      <div class="fc-title">➕ เพิ่มสินค้าใหม่</div>
       <div class="frow">
-        <label>บาร์โค้ด <span style="color:#e04040">*</span></label>
-        <input type="text" id="mBarcode" placeholder="กรอกหรือสแกนบาร์โค้ด" autocomplete="off" inputmode="numeric">
+        <label class="fl">บาร์โค้ด<span class="req">*</span></label>
+        <input type="text" id="mBarcode" class="mono-input" placeholder="บาร์โค้ด" autocomplete="off" inputmode="numeric">
       </div>
       <div class="frow">
-        <label>ชื่อสินค้า <span style="color:#e04040">*</span></label>
+        <label class="fl">ชื่อสินค้า<span class="req">*</span></label>
         <input type="text" id="mName" placeholder="ชื่อสินค้า" autocomplete="off">
       </div>
       <div class="frow">
-        <label>หน่วย & ขนาด (เพิ่มได้หลายหน่วย เช่น เดี่ยว=1, แพ็ก=12, ลัง=48)</label>
+        <label class="fl">หน่วย & ขนาด <span style="color:var(--text3);font-weight:400">(เช่น pcs=1, pack=12, case=48)</span></label>
         <div id="mUnitList"></div>
-        <button type="button" onclick="addMUnitRow()" style="margin-top:6px;padding:6px 14px;border:1px dashed #534AB7;border-radius:8px;background:transparent;color:#534AB7;font-size:13px;cursor:pointer">+ เพิ่มหน่วย</button>
+        <button type="button" class="add-unit-btn" onclick="addMUnitRow()">+ เพิ่มหน่วย</button>
       </div>
-      <button class="btn-save" onclick="saveMasterItem()">💾 บันทึกลง Master</button>
+      <button class="btn btn-primary" onclick="saveMasterItem()" style="margin-top:12px">💾 บันทึกลง Master</button>
     </div>
 
-    <!-- Search -->
-    <div class="master-search">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="mSearch" placeholder="ค้นหาบาร์โค้ดหรือชื่อสินค้า..." oninput="renderMaster()">
     </div>
     <div id="masterList"></div>
@@ -285,6 +414,22 @@ function updatePieceCalc(){
 }
 
 // ===== BARCODE PREVIEW + LOOKUP =====
+function onBarcodeInput(){
+  previewBarcode();
+  clearTimeout(window._bcTimer);
+  const val=document.getElementById('fBarcode').value.trim();
+  if(val.length>=6){
+    window._bcTimer=setTimeout(()=>{
+      // only jump if barcode field still has focus (user isn't typing fast)
+      if(document.activeElement.id==='fBarcode'){
+        const qty=document.getElementById('fQty');
+        qty.select();
+        qty.focus();
+      }
+    },800);
+  }
+}
+
 function previewBarcode(){
   const val=document.getElementById('fBarcode').value.trim();
   const wrap=document.getElementById('bcPreview');
@@ -490,18 +635,21 @@ function renderList(){
     const unit=it['หน่วย']||'';
     const dt=it['วันเวลา']?new Date(it['วันเวลา']).toLocaleString('th-TH',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
     return `<div class="card"><div class="card-body">
-      <div class="card-top"><div class="csub">${dt}</div><div style="font-size:12px;color:#888">${it['โลเคชั่น']||'—'}</div></div>
-      <div style="font-size:12px;color:#aaa;margin-bottom:2px">${bc}</div>
-      ${nm?`<div style="font-size:13px;color:#534AB7;font-weight:600;margin-bottom:8px">📦 ${nm}</div>`:`<div style="font-size:12px;color:#bbb;margin-bottom:8px">ไม่มีชื่อสินค้า</div>`}
-      <div style="display:flex;gap:8px">
-        <div class="cnt-box" style="flex:1"><div class="cnt-lbl">นับได้</div><div class="cnt-num ${qty<0?'diff-neg':''}">${qty} ${unit}</div></div>
-        ${Number(it['ชิ้นสุทธิ'])&&unit!=='ชิ้น'?`<div class="cnt-box" style="flex:1"><div class="cnt-lbl">ชิ้นสุทธิ</div><div class="cnt-num ${pieces<0?'diff-neg':''}">${pieces}</div></div>`:''}
+      <div class="card-top">
+        <span class="card-time">${dt}</span>
+        <span class="card-loc">${it['โลเคชั่น']||'—'}</span>
+      </div>
+      <div class="card-bc">${bc}</div>
+      <div class="card-nm${nm?'':' empty'}">${nm||'ไม่มีชื่อสินค้า'}</div>
+      <div class="cnt-row">
+        <div class="cnt-box"><div class="cnt-lbl">นับได้</div><div class="cnt-num${qty<0?' neg':''}">${qty} <span style="font-size:12px;font-weight:400">${unit}</span></div></div>
+        ${unit&&unit!=='pcs'&&unit!=='ชิ้น'?`<div class="cnt-box"><div class="cnt-lbl">ชิ้นสุทธิ</div><div class="cnt-num${pieces<0?' neg':''}">${pieces}</div></div>`:''}
       </div>
     </div></div>`;
   }).join('')||'<div class="empty">ยังไม่มีรายการ</div>';
 
   document.getElementById('tableView').innerHTML=`<div class="tbl-wrap"><table>
-    <thead><tr><th>บาร์โค้ด</th><th>ชื่อสินค้า</th><th>โลเคชั่น</th><th>หน่วย</th><th style="text-align:right">นับได้</th><th style="text-align:right">ชิ้นสุทธิ</th><th>เวลา</th></tr></thead>
+    <thead><tr><th>บาร์โค้ด</th><th>ชื่อสินค้า</th><th>โลเคชั่น</th><th>หน่วย</th><th>นับได้</th><th>ชิ้นสุทธิ</th><th>เวลา</th></tr></thead>
     <tbody>${items.map(it=>{
     const qty=Number(it['นับได้'])||0;
     const pieces=Number(it['ชิ้นสุทธิ'])||qty;
@@ -509,12 +657,13 @@ function renderList(){
     const nm=it['ชื่อสินค้า']||'—';
     const dt=it['วันเวลา']?new Date(it['วันเวลา']).toLocaleString('th-TH',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
     return `<tr>
-      <td>${bc}</td><td style="color:#534AB7">${nm}</td>
-      <td style="color:#888">${it['โลเคชั่น']||'—'}</td>
-      <td style="color:#888">${it['หน่วย']||'—'}</td>
-      <td style="text-align:right;font-weight:600" class="${qty<0?'diff-neg':''}">${qty}</td>
-      <td style="text-align:right;font-weight:600" class="${pieces<0?'diff-neg':''}">${pieces}</td>
-      <td style="color:#aaa;white-space:nowrap">${dt}</td>
+      <td class="bc-td">${bc}</td>
+      <td class="nm-td">${nm}</td>
+      <td style="color:var(--text2)">${it['โลเคชั่น']||'—'}</td>
+      <td style="color:var(--text2)">${it['หน่วย']||'—'}</td>
+      <td class="num-td${qty<0?' neg':''}">${qty}</td>
+      <td class="num-td${pieces<0?' neg':''}">${pieces}</td>
+      <td style="color:var(--text3);white-space:nowrap;font-family:'SF Mono',monospace;font-size:11px">${dt}</td>
     </tr>`;}).join('')}</tbody></table></div>`;
   switchView(view);
 }
@@ -590,6 +739,21 @@ function exportCSV(){
 
 loadData();
 loadMaster();
+
+// Theme toggle
+function toggleTheme(){
+  const html=document.documentElement;
+  const isDark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',isDark?'light':'dark');
+  document.getElementById('themeBtn').textContent=isDark?'🌙':'☀️';
+  try{localStorage.setItem('theme',isDark?'light':'dark');}catch(e){}
+}
+(function(){
+  try{
+    const t=localStorage.getItem('theme');
+    if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
